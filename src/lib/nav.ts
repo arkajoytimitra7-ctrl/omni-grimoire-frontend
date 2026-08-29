@@ -1,15 +1,8 @@
 import { BookMarked, FolderTree, Heart, LayoutDashboard, Library, Search, Tags } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-export interface NavItem {
-  label: string;
-  to: string;
-  icon: LucideIcon;
-  description: string;
-}
-
 /** Single source of truth for the authenticated app navigation. */
-export const appNav: NavItem[] = [
+export const appNav = [
   {
     label: "Dashboard",
     to: "/dashboard",
