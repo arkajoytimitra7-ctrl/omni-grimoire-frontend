@@ -11,7 +11,7 @@ export const myProfileQuery = (userId: string | undefined) =>
     queryFn: async (): Promise<Profile | null> => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, display_name, avatar_url, bio, created_at, updated_at")
+        .select("id, display_name, avatar_url, bio, created_at, updated_at")
         .eq("id", userId!)
         .maybeSingle();
 
