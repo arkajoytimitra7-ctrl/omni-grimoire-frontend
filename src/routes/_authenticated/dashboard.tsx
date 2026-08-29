@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, BookMarked, FolderTree, Heart, Tags } from "lucide-react";
+import { 
+  ArrowRight,
+  BookMarked,
+  FolderTree, 
+  Heart, 
+  Tags 
+} from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { privateCategoriesQuery } from "@/features/categories/queries";
@@ -9,7 +15,10 @@ import { userLikesQuery } from "@/features/likes/queries";
 import { publicTagsQuery } from "@/features/tags/queries";
 import { useAuth } from "@/hooks/use-auth";
 
-import type { GrimoireFile } from "@/lib/database.types";
+import type { 
+  GrimoireFile,
+  PrivateCategory
+} from "@/lib/database.types";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -101,6 +110,64 @@ function RecentFiles({
   );
 }
 
+function YourCategories({
+  categories,
+  loading,
+}: {
+  categories: PrivateCategory[] | undefined;
+  loading: boolean;
+}) {
+  const visibleCategories = categories?.slice(0, 6) ?? [];
+
+  return (
+    <section className="surface-rune p-5">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h2 className="font-display text-xl font-semibold">Your categories</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your private categories, organized for quick access.
+          </p>
+        </div>
+
+        <Link
+          to="/categories"
+          className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+        >
+          View all
+          <ArrowRight className="size-4" aria-hidden />
+        </Link>
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        {loading ? (
+          <p className="text-sm text-muted-foreground">
+            Loading categories…
+          </p>
+        ) : visibleCategories.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            You haven't created any categories yet.
+          </p>
+        ) : (
+          visibleCategories.map((category) => (
+            <div
+              key={category.id}
+              className="rounded-lg border border-border p-4"
+            >
+              <p className="font-medium">{category.name}</p>
+
+              {category.description && (
+                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                  {category.description}
+                </p>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </section>
+  );
+}
+
 function DashboardPage() {
   const { user } = useAuth();
   const files = useQuery(userFilesQuery(user?.id));
@@ -131,6 +198,10 @@ function DashboardPage() {
         <StatCard icon={Heart} label="Likes" value={likes.data?.length} loading={likes.isPending} />
       </div>
       <RecentFiles files={files.data} loading={files.isPending} />
+      <YourCategories
+  categories={categories.data}
+  loading={categories.isPending}
+/>
       <p className="text-sm text-muted-foreground">
         Signed in as <span className="text-foreground">{user?.email}</span>. Feature screens are
         scaffolded and read from the existing database.
