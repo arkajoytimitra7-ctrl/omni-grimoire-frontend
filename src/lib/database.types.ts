@@ -20,7 +20,6 @@ export interface Database {
       profiles: {
   Row: {
     id: string;
-    username: string | null;
     display_name: string | null;
     avatar_url: string | null;
     bio: string | null;
@@ -29,7 +28,6 @@ export interface Database {
   };
   Insert: {
     id: string;
-    username?: string | null;
     display_name?: string | null;
     avatar_url?: string | null;
     bio?: string | null;
@@ -37,7 +35,6 @@ export interface Database {
     updated_at?: string | null;
   };
   Update: {
-    username?: string | null;
     display_name?: string | null;
     avatar_url?: string | null;
     bio?: string | null;
