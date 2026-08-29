@@ -18,32 +18,54 @@ export interface Database {
   public: {
     Tables: {
       profiles: {
-        Row: {
-          id: string;
-          username: string | null;
-          display_name: string | null;
-          avatar_url: string | null;
-          bio: string | null;
-          created_at: string;
-          updated_at: string | null;
-        };
-        Insert: {
-          id: string;
-          username?: string | null;
-          display_name?: string | null;
-          avatar_url?: string | null;
-          bio?: string | null;
-          created_at?: string;
-          updated_at?: string | null;
-        };
-        Update: {
-          username?: string | null;
-          display_name?: string | null;
-          avatar_url?: string | null;
-          bio?: string | null;
-          updated_at?: string | null;
-        };
-      };
+      files: {
+  Row: {
+    id: string;
+    owner_id: string;
+    title: string;
+    description: string | null;
+    original_filename: string | null;
+    storage_path: string | null;
+    file_type: string | null;
+    mime_type: string | null;
+    file_size: number | null;
+    visibility: string;
+    private_category_id: string | null;
+    is_deleted: boolean;
+    created_at: string;
+    updated_at: string | null;
+  };
+  Insert: {
+    id?: string;
+    owner_id: string;
+    title: string;
+    description?: string | null;
+    original_filename?: string | null;
+    storage_path?: string | null;
+    file_type?: string | null;
+    mime_type?: string | null;
+    file_size?: number | null;
+    visibility?: string;
+    private_category_id?: string | null;
+    is_deleted?: boolean;
+    created_at?: string;
+    updated_at?: string | null;
+  };
+  Update: {
+    owner_id?: string;
+    title?: string;
+    description?: string | null;
+    original_filename?: string | null;
+    storage_path?: string | null;
+    file_type?: string | null;
+    mime_type?: string | null;
+    file_size?: number | null;
+    visibility?: string;
+    private_category_id?: string | null;
+    is_deleted?: boolean;
+    updated_at?: string | null;
+  };
+};
       private_categories: {
         Row: {
           id: string;
