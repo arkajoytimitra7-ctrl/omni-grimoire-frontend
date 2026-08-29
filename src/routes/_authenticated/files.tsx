@@ -133,9 +133,9 @@ function FilesPage() {
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
                   <span>{file.mime_type ?? "Unknown type"}</span>
 
-                  {file.size_bytes !== null && (
+                  {file.file_size !== null && (
                     <span>
-                      {formatFileSize(file.size_bytes)}
+                      {formatFileSize(file.file_size)}
                     </span>
                   )}
 
