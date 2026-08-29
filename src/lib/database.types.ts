@@ -45,25 +45,28 @@ export interface Database {
   };
 };
       private_categories: {
-        Row: {
-          id: string;
-          user_id: string;
-          name: string;
-          description: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          name: string;
-          description?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          name?: string;
-          description?: string | null;
-        };
-      };
+  Row: {
+    id: string;
+    user_id: string;
+    name: string;
+    description: string | null;
+    created_at: string;
+    updated_at: string | null;
+  };
+  Insert: {
+    id?: string;
+    user_id: string;
+    name: string;
+    description?: string | null;
+    created_at?: string;
+    updated_at?: string | null;
+  };
+  Update: {
+    name?: string;
+    description?: string | null;
+    updated_at?: string | null;
+  };
+};
       public_tags: {
         Row: {
           id: string;
