@@ -20,4 +20,6 @@ export const appNav = [
   { label: "Tags", to: "/tags", icon: Tags, description: "Public tags shared by everyone" },
   { label: "Likes", to: "/likes", icon: Heart, description: "Everything you have favourited" },
   { label: "Search", to: "/search", icon: Search, description: "Find anything, fast" },
-];
+] as const;
+
+export type NavItem = (typeof appNav)[number];
