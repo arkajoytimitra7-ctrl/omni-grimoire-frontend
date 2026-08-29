@@ -11,7 +11,7 @@ export const userLikesQuery = (userId: string | undefined) =>
     queryFn: async (): Promise<Like[]> => {
       const { data, error } = await supabase
         .from("likes")
-        .select("id, user_id, file_id, created_at")
+        .select("user_id, file_id, created_at")
         .eq("user_id", userId!)
         .order("created_at", { ascending: false });
 
