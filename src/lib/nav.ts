@@ -1,15 +1,8 @@
 import { BookMarked, FolderTree, Heart, LayoutDashboard, Library, Search, Tags } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
-export interface NavItem {
-  label: string;
-  to: string;
-  icon: LucideIcon;
-  description: string;
-}
 
 /** Single source of truth for the authenticated app navigation. */
-export const appNav: NavItem[] = [
+export const appNav = [
   {
     label: "Dashboard",
     to: "/dashboard",
@@ -27,4 +20,6 @@ export const appNav: NavItem[] = [
   { label: "Tags", to: "/tags", icon: Tags, description: "Public tags shared by everyone" },
   { label: "Likes", to: "/likes", icon: Heart, description: "Everything you have favourited" },
   { label: "Search", to: "/search", icon: Search, description: "Find anything, fast" },
-];
+] as const;
+
+export type NavItem = (typeof appNav)[number];
