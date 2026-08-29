@@ -11,7 +11,7 @@ export const privateCategoriesQuery = (userId: string | undefined) =>
     queryFn: async (): Promise<PrivateCategory[]> => {
       const { data, error } = await supabase
         .from("private_categories")
-        .select("id, user_id, name, description, created_at")
+        .select("id, user_id, name, description, created_at, updated_at")
         .eq("user_id", userId!)
         .order("name", { ascending: true });
 
