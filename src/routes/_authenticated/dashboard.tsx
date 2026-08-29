@@ -3,9 +3,12 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { 
   ArrowRight,
   BookMarked,
+  FolderPlus,
   FolderTree, 
-  Heart, 
-  Tags 
+  Heart,
+  Search,
+  Tags,
+  Upload
 } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
@@ -168,6 +171,65 @@ function YourCategories({
   );
 }
 
+function QuickActions() {
+  return (
+    <section className="surface-rune p-5">
+      <div>
+        <h2 className="font-display text-xl font-semibold">Quick actions</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Step directly into the parts of your grimoire you use most.
+        </p>
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Link
+          to="/files"
+          className="group rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
+        >
+          <Upload className="size-5 text-primary" aria-hidden />
+          <p className="mt-3 font-medium">Add a file</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Manage your grimoire files.
+          </p>
+        </Link>
+
+        <Link
+          to="/library"
+          className="group rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
+        >
+          <BookMarked className="size-5 text-primary" aria-hidden />
+          <p className="mt-3 font-medium">Browse library</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Explore available files.
+          </p>
+        </Link>
+
+        <Link
+          to="/categories"
+          className="group rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
+        >
+          <FolderPlus className="size-5 text-primary" aria-hidden />
+          <p className="mt-3 font-medium">Categories</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Organize your collection.
+          </p>
+        </Link>
+
+        <Link
+          to="/search"
+          className="group rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
+        >
+          <Search className="size-5 text-primary" aria-hidden />
+          <p className="mt-3 font-medium">Search grimoire</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Find something quickly.
+          </p>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 function DashboardPage() {
   const { user } = useAuth();
   const files = useQuery(userFilesQuery(user?.id));
@@ -202,6 +264,7 @@ function DashboardPage() {
   categories={categories.data}
   loading={categories.isPending}
 />
+      <QuickActions />
       <p className="text-sm text-muted-foreground">
         Signed in as <span className="text-foreground">{user?.email}</span>. Feature screens are
         scaffolded and read from the existing database.
