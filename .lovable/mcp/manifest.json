@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "sdk_version": "0.28.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://project-ref-unset.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "omni-grimoire-frontend",
+      "version": "0.1.0",
+      "title": "Omni Grimoire Frontend"
+    },
+    "tools": [
+      {
+        "name": "list_files",
+        "title": "List grimoire entries",
+        "description": "List the signed-in user's grimoire entries (files), newest first. Optionally filter by category or public visibility.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category_id": {
+              "description": "Only entries in this private category id.",
+              "type": "string"
+            },
+            "only_public": {
+              "description": "Restrict to entries marked public.",
+              "type": "boolean"
+            },
+            "limit": {
+              "description": "Maximum rows to return (default 25, max 100).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_library",
+        "title": "Search the library",
+        "description": "Search grimoire entries visible to the signed-in user by title or description text.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Text to match against entry titles and descriptions."
+            },
+            "limit": {
+              "description": "Maximum rows to return (default 20, max 100).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_categories",
+        "title": "List private categories",
+        "description": "List the signed-in user's private categories used to organise grimoire entries.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_tags",
+        "title": "List public tags",
+        "description": "List the shared public tags that can be attached to grimoire entries.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_likes",
+        "title": "List liked entries",
+        "description": "List the grimoire entries the signed-in user has liked.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_file",
+        "title": "Create grimoire entry",
+        "description": "Create a new grimoire entry (file record) owned by the signed-in user.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Title of the entry."
+            },
+            "description": {
+              "description": "Longer description or body text.",
+              "type": "string"
+            },
+            "category_id": {
+              "description": "Private category id to file it under.",
+              "type": "string"
+            },
+            "is_public": {
+              "description": "Whether the entry is visible in the shared library.",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "title"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
