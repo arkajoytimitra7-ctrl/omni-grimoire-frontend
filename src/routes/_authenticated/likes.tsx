@@ -37,7 +37,7 @@ function LikesPage() {
       {data && data.length > 0 && (
         <ul className="space-y-2">
           {data.map((like) => (
-            <li key={like.id} className="surface-rune p-4 text-sm">
+            <li key={`${like.user_id}-${like.file_id}`} className="surface-rune p-4 text-sm">
               <span className="text-muted-foreground">File</span> {like.file_id}
             </li>
           ))}
