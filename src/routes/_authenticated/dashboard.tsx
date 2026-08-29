@@ -51,9 +51,9 @@ function DashboardPage() {
   return (
     <>
       <PageHeader
-        title="Dashboard"
-        description="A quick reading of everything currently bound to your grimoire."
-      />
+  title={`Welcome back${user?.email ? `, ${user.email.split("@")[0]}` : ""}`}
+  description="A quick reading of everything currently bound to your grimoire."
+/>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           icon={BookMarked}
