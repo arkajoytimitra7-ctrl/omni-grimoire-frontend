@@ -18,51 +18,29 @@ export interface Database {
   public: {
     Tables: {
       profiles: {
-      files: {
   Row: {
     id: string;
-    owner_id: string;
-    title: string;
-    description: string | null;
-    original_filename: string | null;
-    storage_path: string | null;
-    file_type: string | null;
-    mime_type: string | null;
-    file_size: number | null;
-    visibility: string;
-    private_category_id: string | null;
-    is_deleted: boolean;
+    username: string | null;
+    display_name: string | null;
+    avatar_url: string | null;
+    bio: string | null;
     created_at: string;
     updated_at: string | null;
   };
   Insert: {
-    id?: string;
-    owner_id: string;
-    title: string;
-    description?: string | null;
-    original_filename?: string | null;
-    storage_path?: string | null;
-    file_type?: string | null;
-    mime_type?: string | null;
-    file_size?: number | null;
-    visibility?: string;
-    private_category_id?: string | null;
-    is_deleted?: boolean;
+    id: string;
+    username?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    bio?: string | null;
     created_at?: string;
     updated_at?: string | null;
   };
   Update: {
-    owner_id?: string;
-    title?: string;
-    description?: string | null;
-    original_filename?: string | null;
-    storage_path?: string | null;
-    file_type?: string | null;
-    mime_type?: string | null;
-    file_size?: number | null;
-    visibility?: string;
-    private_category_id?: string | null;
-    is_deleted?: boolean;
+    username?: string | null;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    bio?: string | null;
     updated_at?: string | null;
   };
 };
@@ -111,40 +89,53 @@ export interface Database {
         };
       };
       files: {
-        Row: {
-          id: string;
-          user_id: string;
-          category_id: string | null;
-          title: string;
-          description: string | null;
-          storage_path: string | null;
-          mime_type: string | null;
-          size_bytes: number | null;
-          is_public: boolean;
-          created_at: string;
-          updated_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          category_id?: string | null;
-          title: string;
-          description?: string | null;
-          storage_path?: string | null;
-          mime_type?: string | null;
-          size_bytes?: number | null;
-          is_public?: boolean;
-          created_at?: string;
-          updated_at?: string | null;
-        };
-        Update: {
-          category_id?: string | null;
-          title?: string;
-          description?: string | null;
-          is_public?: boolean;
-          updated_at?: string | null;
-        };
-      };
+  Row: {
+    id: string;
+    owner_id: string;
+    title: string;
+    description: string | null;
+    original_filename: string | null;
+    storage_path: string | null;
+    file_type: string | null;
+    mime_type: string | null;
+    file_size: number | null;
+    visibility: string;
+    private_category_id: string | null;
+    is_deleted: boolean;
+    created_at: string;
+    updated_at: string | null;
+  };
+  Insert: {
+    id?: string;
+    owner_id: string;
+    title: string;
+    description?: string | null;
+    original_filename?: string | null;
+    storage_path?: string | null;
+    file_type?: string | null;
+    mime_type?: string | null;
+    file_size?: number | null;
+    visibility?: string;
+    private_category_id?: string | null;
+    is_deleted?: boolean;
+    created_at?: string;
+    updated_at?: string | null;
+  };
+  Update: {
+    owner_id?: string;
+    title?: string;
+    description?: string | null;
+    original_filename?: string | null;
+    storage_path?: string | null;
+    file_type?: string | null;
+    mime_type?: string | null;
+    file_size?: number | null;
+    visibility?: string;
+    private_category_id?: string | null;
+    is_deleted?: boolean;
+    updated_at?: string | null;
+  };
+};
       file_tags: {
         Row: {
           file_id: string;
@@ -159,21 +150,19 @@ export interface Database {
         Update: Record<string, never>;
       };
       likes: {
-        Row: {
-          id: string;
-          user_id: string;
-          file_id: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          file_id: string;
-          created_at?: string;
-        };
-        Update: Record<string, never>;
-      };
-    };
+  Row: {
+    user_id: string;
+    file_id: string;
+    created_at: string;
+  };
+  Insert: {
+    user_id: string;
+    file_id: string;
+    created_at?: string;
+  };
+  Update: Record<string, never>;
+};
+      
     Views: Record<string, never>;
     Functions: Record<string, never>;
     Enums: Record<string, never>;
