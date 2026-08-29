@@ -1,0 +1,30 @@
+import { BookMarked, FolderTree, Heart, LayoutDashboard, Library, Search, Tags } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+export interface NavItem {
+  label: string;
+  to: string;
+  icon: LucideIcon;
+  description: string;
+}
+
+/** Single source of truth for the authenticated app navigation. */
+export const appNav: NavItem[] = [
+  {
+    label: "Dashboard",
+    to: "/dashboard",
+    icon: LayoutDashboard,
+    description: "Activity and totals across your grimoire",
+  },
+  { label: "Library", to: "/library", icon: Library, description: "Browse the shared collection" },
+  { label: "Files", to: "/files", icon: BookMarked, description: "Manage your own entries" },
+  {
+    label: "Categories",
+    to: "/categories",
+    icon: FolderTree,
+    description: "Your private organisation",
+  },
+  { label: "Tags", to: "/tags", icon: Tags, description: "Public tags shared by everyone" },
+  { label: "Likes", to: "/likes", icon: Heart, description: "Everything you have favourited" },
+  { label: "Search", to: "/search", icon: Search, description: "Find anything, fast" },
+];
