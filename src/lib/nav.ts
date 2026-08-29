@@ -1,5 +1,5 @@
 import { BookMarked, FolderTree, Heart, LayoutDashboard, Library, Search, Tags } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+
 
 /** Single source of truth for the authenticated app navigation. */
 export const appNav = [
