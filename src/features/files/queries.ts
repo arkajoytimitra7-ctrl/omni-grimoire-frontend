@@ -4,7 +4,7 @@ import type { GrimoireFile } from "@/lib/database.types";
 import { supabase } from "@/lib/supabase";
 
 const FILE_COLUMNS =
-  "id, user_id, category_id, title, description, storage_path, mime_type, size_bytes, is_public, created_at, updated_at";
+  "id, owner_id, title, description, original_filename, storage_path, file_type, mime_type, file_size, visibility, private_category_id, is_deleted, created_at, updated_at";
 
 /** Shared library: whatever the RLS policies expose to the current viewer. */
 export const libraryFilesQuery = queryOptions({
@@ -30,7 +30,8 @@ export const userFilesQuery = (userId: string | undefined) =>
       const { data, error } = await supabase
         .from("files")
         .select(FILE_COLUMNS)
-        .eq("user_id", userId!)
+        .eq("owner_id", userId!)
+        .eq("is_deleted", false)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
