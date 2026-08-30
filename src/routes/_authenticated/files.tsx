@@ -18,6 +18,7 @@ import { userFilesQuery } from "@/features/files/queries";
 import { privateCategoriesQuery } from "@/features/categories/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { FileUploadDialog } from "@/components/files/file-upload-dialog";
+import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
 import { createFileSignedUrl,
          downloadFile,
        } from "@/features/files/access";
@@ -234,6 +235,9 @@ const [search, setSearch] = useState("");
                   </span>
                 </div>
               </div>
+                     {file.mime_type?.startsWith("image/") && (
+  <FilePreviewDialog file={file} />
+)}
               <Button
   variant="outline"
   size="sm"
