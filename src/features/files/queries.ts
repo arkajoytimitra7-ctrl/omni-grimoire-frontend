@@ -13,6 +13,8 @@ export const libraryFilesQuery = queryOptions({
     const { data, error } = await supabase
       .from("files")
       .select(FILE_COLUMNS)
+      .eq("visibility", "public")
+      .eq("is_deleted", false)
       .order("created_at", { ascending: false })
       .limit(50);
 
