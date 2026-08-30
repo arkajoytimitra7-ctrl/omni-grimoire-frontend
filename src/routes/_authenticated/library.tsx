@@ -140,7 +140,7 @@ function LibraryPage() {
           {filteredFiles.map((file) => (
             <li
   key={file.id}
-  className="surface-rune flex items-start gap-4 p-4"
+  className="surface-rune flex flex-col gap-4 p-4"
 >
   <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border">
     {file.mime_type?.startsWith("image/") ? (
