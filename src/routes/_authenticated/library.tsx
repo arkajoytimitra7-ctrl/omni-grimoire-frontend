@@ -17,6 +17,13 @@ import {
   createFileSignedUrl,
   downloadFile,
 } from "@/features/files/access";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const Route = createFileRoute("/_authenticated/library")({
   head: () => ({
@@ -45,22 +52,29 @@ function formatFileSize(bytes: number): string {
 function LibraryPage() {
   const { data, isPending, error } = useQuery(libraryFilesQuery);
   const [search, setSearch] = useState("");
+  const [fileType, setFileType] = useState("all");
 
   const filteredFiles = useMemo(() => {
   if (!data) return [];
 
   const term = search.trim().toLowerCase();
 
-  if (!term) return data;
+  return data.filter((file) => {
+    const matchesSearch =
+      !term ||
+      [file.title, file.description, file.mime_type]
+        .filter(Boolean)
+        .some((value) =>
+          value!.toLowerCase().includes(term),
+        );
 
-  return data.filter((file) =>
-    [file.title, file.description, file.mime_type]
-      .filter(Boolean)
-      .some((value) =>
-        value!.toLowerCase().includes(term),
-      ),
-  );
-}, [data, search]);
+    const matchesFileType =
+      fileType === "all" ||
+      file.mime_type?.startsWith(`${fileType}/`);
+
+    return matchesSearch && matchesFileType;
+  });
+}, [data, search, fileType]);
 
   const handleOpenFile = async (storagePath: string) => {
   try {
@@ -108,6 +122,22 @@ function LibraryPage() {
     aria-label="Search the library"
     className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm outline-none transition focus:ring-2 focus:ring-ring"
   />
+</div>
+      <div className="flex flex-col gap-3 sm:flex-row">
+  <Select value={fileType} onValueChange={setFileType}>
+    <SelectTrigger className="w-full sm:w-48">
+      <SelectValue placeholder="File type" />
+    </SelectTrigger>
+
+    <SelectContent>
+      <SelectItem value="all">All types</SelectItem>
+      <SelectItem value="image">Images</SelectItem>
+      <SelectItem value="application">Documents</SelectItem>
+      <SelectItem value="text">Text</SelectItem>
+      <SelectItem value="audio">Audio</SelectItem>
+      <SelectItem value="video">Video</SelectItem>
+    </SelectContent>
+  </Select>
 </div>
       {isPending && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
