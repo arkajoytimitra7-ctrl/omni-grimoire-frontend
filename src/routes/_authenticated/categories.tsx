@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { privateCategoriesQuery } from "@/features/categories/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { CategoryCreateDialog } from "@/components/categories/category-create-dialog";
+import { CategoryEditDialog } from "@/components/categories/category-edit-dialog";
+import { CategoryDeleteButton } from "@/components/categories/category-delete-button";
 
 export const Route = createFileRoute("/_authenticated/categories")({
   head: () => ({
@@ -57,12 +59,42 @@ function CategoriesPage() {
       {data && data.length > 0 && (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((category) => (
-            <li key={category.id} className="surface-rune p-4">
-              <h2 className="text-base font-semibold">{category.name}</h2>
-              {category.description && (
-                <p className="mt-1 text-sm text-muted-foreground">{category.description}</p>
-              )}
-            </li>
+            <li
+  key={category.id}
+  className="surface-rune flex flex-col gap-4 p-4"
+>
+  <div>
+    <h2 className="text-base font-semibold">
+      {category.name}
+    </h2>
+
+    {category.description && (
+      <p className="mt-1 text-sm text-muted-foreground">
+        {category.description}
+      </p>
+    )}
+  </div>
+
+  <div className="flex flex-wrap gap-2">
+    <CategoryEditDialog
+      category={category}
+      onUpdated={() => {
+        void queryClient.invalidateQueries({
+          queryKey: ["private_categories", user?.id],
+        });
+      }}
+    />
+
+    <CategoryDeleteButton
+      categoryId={category.id}
+      onDeleted={() => {
+        void queryClient.invalidateQueries({
+          queryKey: ["private_categories", user?.id],
+        });
+      }}
+    />
+  </div>
+</li>
           ))}
         </ul>
       )}
