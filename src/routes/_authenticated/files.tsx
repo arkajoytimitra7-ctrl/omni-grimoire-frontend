@@ -56,9 +56,10 @@ function FilesPage() {
     return (
     <>
       <PageHeader
-        title="Files"
-        description="Your personal collection of files stored in Omni Grimoire."
-      />
+  title="Files"
+  description="Your personal collection of files stored in Omni Grimoire."
+  actions={<FileUploadDialog categories={[]} />}
+/>
 
       <div className="relative">
         <Search
@@ -151,4 +152,4 @@ function FilesPage() {
       )}
     </>
   );
-      }
+}
