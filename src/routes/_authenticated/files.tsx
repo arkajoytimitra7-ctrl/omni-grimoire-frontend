@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { userFilesQuery } from "@/features/files/queries";
 import { useAuth } from "@/hooks/use-auth";
+import { FileUploadDialog } from "@/components/files/file-upload-dialog";
 
 export const Route = createFileRoute("/_authenticated/files")({
   head: () => ({
