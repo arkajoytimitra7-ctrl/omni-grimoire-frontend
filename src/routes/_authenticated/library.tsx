@@ -7,6 +7,16 @@ import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { libraryFilesQuery } from "@/features/files/queries";
 
+import { Download, ExternalLink } from "lucide-react";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
+import {
+  createFileSignedUrl,
+  downloadFile,
+} from "@/features/files/access";
+
 export const Route = createFileRoute("/_authenticated/library")({
   head: () => ({
     meta: [
@@ -33,6 +43,34 @@ function formatFileSize(bytes: number): string {
 
 function LibraryPage() {
   const { data, isPending, error } = useQuery(libraryFilesQuery);
+
+  const handleOpenFile = async (storagePath: string) => {
+  try {
+    const signedUrl = await createFileSignedUrl(storagePath);
+    window.open(signedUrl, "_blank", "noopener,noreferrer");
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Could not open this file.",
+    );
+  }
+};
+
+  const handleDownloadFile = async (
+  storagePath: string,
+  originalFilename: string,
+) => {
+  try {
+    await downloadFile(storagePath, originalFilename);
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Could not download this file.",
+    );
+  }
+};
 
   return (
     <>
@@ -96,6 +134,34 @@ function LibraryPage() {
       </span>
     </div>
   </div>
+              <div className="flex flex-wrap gap-2">
+  {file.mime_type?.startsWith("image/") && (
+    <FilePreviewDialog file={file} />
+  )}
+
+  <Button
+    variant="outline"
+    size="sm"
+    onClick={() => void handleOpenFile(file.storage_path)}
+  >
+    <ExternalLink className="mr-2 size-4" aria-hidden />
+    Open
+  </Button>
+
+  <Button
+    variant="outline"
+    size="sm"
+    onClick={() =>
+      void handleDownloadFile(
+        file.storage_path,
+        file.original_filename,
+      )
+    }
+  >
+    <Download className="mr-2 size-4" aria-hidden />
+    Download
+  </Button>
+</div>
 </li>
           ))}
         </ul>
