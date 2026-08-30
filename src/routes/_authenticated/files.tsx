@@ -5,6 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BookMarked, FileText, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
