@@ -93,3 +93,33 @@ export async function createFile({
 
   return fileId;
 }
+
+export async function deleteFile({
+  userId,
+  fileId,
+  storagePath,
+}: {
+  userId: string;
+  fileId: string;
+  storagePath: string;
+}) {
+  // Delete the actual Storage object first.
+  const { error: storageError } = await supabase.storage
+    .from(BUCKET)
+    .remove([storagePath]);
+
+  if (storageError) {
+    throw storageError;
+  }
+
+  // Only after Storage deletion succeeds, soft-delete the database row.
+  const { error: databaseError } = await supabase
+    .from("files")
+    .update({ is_deleted: true })
+    .eq("id", fileId)
+    .eq("owner_id", userId);
+
+  if (databaseError) {
+    throw databaseError;
+  }
+}
