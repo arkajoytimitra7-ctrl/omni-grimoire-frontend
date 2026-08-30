@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { FileText, Image, Library } from "lucide-react";
+import { useMemo, useState } from "react";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { libraryFilesQuery } from "@/features/files/queries";
 
-import { Download, ExternalLink } from "lucide-react";
+import { Download, ExternalLink, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,23 @@ function formatFileSize(bytes: number): string {
 
 function LibraryPage() {
   const { data, isPending, error } = useQuery(libraryFilesQuery);
+  const [search, setSearch] = useState("");
+
+  const filteredFiles = useMemo(() => {
+  if (!data) return [];
+
+  const term = search.trim().toLowerCase();
+
+  if (!term) return data;
+
+  return data.filter((file) =>
+    [file.title, file.description, file.mime_type]
+      .filter(Boolean)
+      .some((value) =>
+        value!.toLowerCase().includes(term),
+      ),
+  );
+}, [data, search]);
 
   const handleOpenFile = async (storagePath: string) => {
   try {
@@ -75,6 +93,22 @@ function LibraryPage() {
   return (
     <>
       <PageHeader title="Library" description="Entries visible to you across the grimoire." />
+
+      <div className="relative">
+  <Search
+    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+    aria-hidden
+  />
+
+  <input
+    type="search"
+    value={search}
+    onChange={(event) => setSearch(event.target.value)}
+    placeholder="Search the library..."
+    aria-label="Search the library"
+    className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm outline-none transition focus:ring-2 focus:ring-ring"
+  />
+</div>
       {isPending && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => (
@@ -90,9 +124,20 @@ function LibraryPage() {
           description="No entries are visible yet. Once files are added they will appear here."
         />
       )}
-      {data && data.length > 0 && (
+      {!isPending &&
+  !error &&
+  data &&
+  data.length > 0 &&
+  filteredFiles.length === 0 && (
+    <EmptyState
+      icon={Search}
+      title="No matching files"
+      description={`No files match "${search}". Try a different search term.`}
+    />
+  )}
+      {filteredFiles.length > 0 && (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {data.map((file) => (
+          {filteredFiles.map((file) => (
             <li
   key={file.id}
   className="surface-rune flex items-start gap-4 p-4"
