@@ -2,7 +2,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createFile } from "@/features/files/mutations";
 import { createFileRoute } from "@tanstack/react-router";
-import { BookMarked, FileText, Search } from "lucide-react";
+import { BookMarked, 
+         FileText, 
+         Search, 
+         ExternalLink,
+         Download,
+       } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -13,8 +18,9 @@ import { userFilesQuery } from "@/features/files/queries";
 import { privateCategoriesQuery } from "@/features/categories/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { FileUploadDialog } from "@/components/files/file-upload-dialog";
-import { ExternalLink } from "lucide-react";
-import { createFileSignedUrl } from "@/features/files/access";
+import { createFileSignedUrl,
+         downloadFile,
+       } from "@/features/files/access";
 
 export const Route = createFileRoute("/_authenticated/files")({
   head: () => ({
@@ -75,6 +81,21 @@ const [search, setSearch] = useState("");
       error instanceof Error
         ? error.message
         : "Could not open this file.",
+    );
+  }
+};
+
+  const handleDownloadFile = async (
+  storagePath: string,
+  originalFilename: string,
+) => {
+  try {
+    await downloadFile(storagePath, originalFilename);
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Could not download this file.",
     );
   }
 };
@@ -220,6 +241,19 @@ const [search, setSearch] = useState("");
 >
   <ExternalLink className="mr-2 size-4" aria-hidden />
   Open
+</Button>
+   <Button
+  variant="outline"
+  size="sm"
+  onClick={() =>
+    void handleDownloadFile(
+      file.storage_path,
+      file.original_filename,
+    )
+  }
+>
+  <Download className="mr-2 size-4" aria-hidden />
+  Download
 </Button>
             </li>
           ))}
