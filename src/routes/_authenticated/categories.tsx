@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { FolderTree } from "lucide-react";
 
@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { privateCategoriesQuery } from "@/features/categories/queries";
 import { useAuth } from "@/hooks/use-auth";
+import { CategoryCreateDialog } from "@/components/categories/category-create-dialog";
 
 export const Route = createFileRoute("/_authenticated/categories")({
   head: () => ({
@@ -20,11 +21,30 @@ export const Route = createFileRoute("/_authenticated/categories")({
 
 function CategoriesPage() {
   const { user } = useAuth();
-  const { data, isPending, error } = useQuery(privateCategoriesQuery(user?.id));
+  const queryClient = useQueryClient();
+
+  const { data, isPending, error } = useQuery(
+    privateCategoriesQuery(user?.id),
+  );
 
   return (
     <>
-      <PageHeader title="Categories" description="Private shelves visible only to you." />
+      <PageHeader
+  title="Categories"
+  description="Private shelves visible only to you."
+  actions={
+    user ? (
+      <CategoryCreateDialog
+        userId={user.id}
+        onCreated={() => {
+          void queryClient.invalidateQueries({
+            queryKey: ["private_categories", user.id],
+          });
+        }}
+      />
+    ) : null
+  }
+/>
       {isPending && <Skeleton className="h-24 rounded-xl" />}
       {error && <p className="text-sm text-destructive">{error.message}</p>}
       {data && data.length === 0 && (
