@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { userFilesQuery } from "@/features/files/queries";
+import { privateCategoriesQuery } from "@/features/categories/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { FileUploadDialog } from "@/components/files/file-upload-dialog";
 
@@ -36,8 +37,14 @@ function formatFileSize(bytes: number): string {
 
 function FilesPage() {
   const { user } = useAuth();
-  const { data, isPending, error } = useQuery(userFilesQuery(user?.id));
-  const [search, setSearch] = useState("");
+
+const { data, isPending, error } = useQuery(userFilesQuery(user?.id));
+
+const { data: categories = [] } = useQuery(
+  privateCategoriesQuery(user?.id),
+);
+
+const [search, setSearch] = useState("");
 
     const filteredFiles = useMemo(() => {
     if (!data) return [];
@@ -58,7 +65,7 @@ function FilesPage() {
       <PageHeader
   title="Files"
   description="Your personal collection of files stored in Omni Grimoire."
-  actions={<FileUploadDialog categories={[]} />}
+  actions={<FileUploadDialog categories={categories} />}
 />
 
       <div className="relative">
