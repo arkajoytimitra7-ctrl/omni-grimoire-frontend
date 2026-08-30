@@ -19,6 +19,7 @@ import { privateCategoriesQuery } from "@/features/categories/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { FileUploadDialog } from "@/components/files/file-upload-dialog";
 import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
+import { FileDeleteDialog } from "@/components/files/file-delete-dialog";
 import { createFileSignedUrl,
          downloadFile,
        } from "@/features/files/access";
@@ -260,6 +261,17 @@ const [search, setSearch] = useState("");
   <Download className="mr-2 size-4" aria-hidden />
   Download
 </Button>
+            <FileDeleteDialog
+  fileId={file.id}
+  storagePath={file.storage_path}
+  title={file.title}
+  userId={user!.id}
+  onDeleted={() => {
+    void queryClient.invalidateQueries({
+      queryKey: ["files", "owned", user!.id],
+    });
+  }}
+/>                  
 </div>
             </li>
           ))}
