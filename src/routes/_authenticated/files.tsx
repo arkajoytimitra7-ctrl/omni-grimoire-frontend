@@ -1,4 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { createFile } from "@/features/files/mutations";
 import { createFileRoute } from "@tanstack/react-router";
 import { BookMarked, FileText, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -37,6 +39,7 @@ function formatFileSize(bytes: number): string {
 
 function FilesPage() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
 const { data, isPending, error } = useQuery(userFilesQuery(user?.id));
 
@@ -65,7 +68,48 @@ const [search, setSearch] = useState("");
       <PageHeader
   title="Files"
   description="Your personal collection of files stored in Omni Grimoire."
-  actions={<FileUploadDialog categories={categories} />}
+  actions={
+  <FileUploadDialog
+    categories={categories}
+    onSubmit={async ({
+      title,
+      description,
+      file,
+      categoryId,
+      visibility,
+    }) => {
+      if (!user) {
+        toast.error("You must be signed in to upload a file.");
+        return;
+      }
+
+      try {
+        await createFile({
+          userId: user.id,
+          title,
+          description,
+          file,
+          categoryId,
+          visibility,
+        });
+
+        await queryClient.invalidateQueries({
+          queryKey: ["files", "owned", user.id],
+        });
+
+        toast.success("File uploaded successfully.");
+      } catch (error) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Could not upload file.",
+        );
+
+        throw error;
+      }
+    }}
+  />
+  }
 />
 
       <div className="relative">
