@@ -200,9 +200,9 @@ const [search, setSearch] = useState("");
         <ul className="space-y-3">
           {filteredFiles.map((file) => (
             <li
-              key={file.id}
-              className="surface-rune flex items-start gap-4 p-4"
-            >
+  key={file.id}
+  className="surface-rune flex flex-col gap-4 p-4 sm:flex-row sm:items-start"
+>
               <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border">
                 <FileText
                   className="size-5 text-primary"
@@ -235,6 +235,7 @@ const [search, setSearch] = useState("");
                   </span>
                 </div>
               </div>
+                     <div className="flex flex-wrap gap-2">
                      {file.mime_type?.startsWith("image/") && (
   <FilePreviewDialog file={file} />
 )}
@@ -259,6 +260,7 @@ const [search, setSearch] = useState("");
   <Download className="mr-2 size-4" aria-hidden />
   Download
 </Button>
+</div>
             </li>
           ))}
         </ul>
