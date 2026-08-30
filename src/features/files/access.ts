@@ -11,3 +11,18 @@ export async function createFileSignedUrl(storagePath: string) {
 
   return data.signedUrl;
 }
+
+export async function downloadFile(
+  storagePath: string,
+  originalFilename: string,
+) {
+  const { data, error } = await supabase.storage
+    .from(BUCKET)
+    .createSignedUrl(storagePath, 60 * 10, {
+      download: originalFilename,
+    });
+
+  if (error) throw error;
+
+  window.location.assign(data.signedUrl);
+}
