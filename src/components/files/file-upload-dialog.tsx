@@ -1,4 +1,5 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,33 +26,74 @@ type Category = {
   name: string;
 };
 
+type FileUploadData = {
+  title: string;
+  description: string;
+  file: File;
+  categoryId: string | null;
+  visibility: "private" | "public";
+};
+
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
+const ALLOWED_MIME_TYPES = new Set([
+  "application/pdf",
+  "text/plain",
+  "text/markdown",
+  "application/rtf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+]);
+
 export function FileUploadDialog({
   categories,
   onSubmit,
 }: {
   categories: Category[];
-  onSubmit?: (data: {
-    title: string;
-    description: string;
-    file: File;
-    categoryId: string | null;
-    visibility: "private" | "public";
-  }) => Promise<void> | void;
+  onSubmit?: (data: FileUploadData) => Promise<void> | void;
 }) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [categoryId, setCategoryId] = useState<string>("none");
-  const [visibility, setVisibility] = useState<"private" | "public">("private");
+  const [categoryId, setCategoryId] = useState("none");
+  const [visibility, setVisibility] =
+    useState<"private" | "public">("private");
   const [pending, setPending] = useState(false);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selected = event.target.files?.[0] ?? null;
 
+    if (!selected) {
+      setFile(null);
+      return;
+    }
+
+    if (selected.size > MAX_FILE_SIZE) {
+      toast.error("File is too large. Maximum size is 50 MB.");
+      event.target.value = "";
+      setFile(null);
+      return;
+    }
+
+    if (!ALLOWED_MIME_TYPES.has(selected.type)) {
+      toast.error("This file type is not supported.");
+      event.target.value = "";
+      setFile(null);
+      return;
+    }
+
     setFile(selected);
 
-    if (selected && !title.trim()) {
+    if (!title.trim()) {
       setTitle(selected.name.replace(/\.[^/.]+$/, ""));
     }
   };
@@ -59,13 +101,33 @@ export function FileUploadDialog({
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    if (!file) return;
+    if (!file) {
+      toast.error("Please select a file.");
+      return;
+    }
+
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
+      toast.error("Please enter a title.");
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("File is too large. Maximum size is 50 MB.");
+      return;
+    }
+
+    if (!ALLOWED_MIME_TYPES.has(file.type)) {
+      toast.error("This file type is not supported.");
+      return;
+    }
 
     setPending(true);
 
     try {
       await onSubmit?.({
-        title: title.trim(),
+        title: trimmedTitle,
         description: description.trim(),
         file,
         categoryId: categoryId === "none" ? null : categoryId,
@@ -78,6 +140,8 @@ export function FileUploadDialog({
       setFile(null);
       setCategoryId("none");
       setVisibility("private");
+    } catch {
+      // The upload handler is responsible for displaying its own error.
     } finally {
       setPending(false);
     }
@@ -93,7 +157,8 @@ export function FileUploadDialog({
         <DialogHeader>
           <DialogTitle>Add to your grimoire</DialogTitle>
           <DialogDescription>
-            Upload a file and bind it to your library.
+            Upload a supported file and optionally organize it into a
+            category.
           </DialogDescription>
         </DialogHeader>
 
@@ -106,11 +171,16 @@ export function FileUploadDialog({
               required
               onChange={handleFileChange}
             />
+
             {file && (
               <p className="text-xs text-muted-foreground">
                 {file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB
               </p>
             )}
+
+            <p className="text-xs text-muted-foreground">
+              Maximum 50 MB. Supported documents and common image formats.
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -118,6 +188,7 @@ export function FileUploadDialog({
             <Input
               id="file-title"
               required
+              maxLength={200}
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               placeholder="My study notes"
@@ -128,6 +199,7 @@ export function FileUploadDialog({
             <Label htmlFor="file-description">Description</Label>
             <Textarea
               id="file-description"
+              maxLength={1000}
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               placeholder="A short description of this file"
@@ -141,8 +213,10 @@ export function FileUploadDialog({
               <SelectTrigger>
                 <SelectValue placeholder="Choose a category" />
               </SelectTrigger>
+
               <SelectContent>
                 <SelectItem value="none">No category</SelectItem>
+
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     {category.name}
@@ -154,6 +228,7 @@ export function FileUploadDialog({
 
           <div className="space-y-2">
             <Label>Visibility</Label>
+
             <Select
               value={visibility}
               onValueChange={(value) =>
@@ -163,6 +238,7 @@ export function FileUploadDialog({
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
+
               <SelectContent>
                 <SelectItem value="private">Private</SelectItem>
                 <SelectItem value="public">Public</SelectItem>
@@ -170,11 +246,15 @@ export function FileUploadDialog({
             </Select>
           </div>
 
-          <Button type="submit" className="w-full" disabled={pending || !file}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={pending || !file || !title.trim()}
+          >
             {pending ? "Preparing…" : "Add file"}
           </Button>
         </form>
       </DialogContent>
     </Dialog>
   );
-    }
+}
