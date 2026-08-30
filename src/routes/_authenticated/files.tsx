@@ -12,6 +12,8 @@ import { userFilesQuery } from "@/features/files/queries";
 import { privateCategoriesQuery } from "@/features/categories/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { FileUploadDialog } from "@/components/files/file-upload-dialog";
+import { ExternalLink } from "lucide-react";
+import { createFileSignedUrl } from "@/features/files/access";
 
 export const Route = createFileRoute("/_authenticated/files")({
   head: () => ({
@@ -62,6 +64,19 @@ const [search, setSearch] = useState("");
         .some((value) => value!.toLowerCase().includes(term)),
     );
   }, [data, search]);
+
+  const handleOpenFile = async (storagePath: string) => {
+  try {
+    const signedUrl = await createFileSignedUrl(storagePath);
+    window.open(signedUrl, "_blank", "noopener,noreferrer");
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Could not open this file.",
+    );
+  }
+};
 
     return (
     <>
@@ -197,6 +212,14 @@ const [search, setSearch] = useState("");
                   </span>
                 </div>
               </div>
+              <Button
+  variant="outline"
+  size="sm"
+  onClick={() => void handleOpenFile(file.storage_path)}
+>
+  <ExternalLink className="mr-2 size-4" aria-hidden />
+  Open
+</Button>
             </li>
           ))}
         </ul>
