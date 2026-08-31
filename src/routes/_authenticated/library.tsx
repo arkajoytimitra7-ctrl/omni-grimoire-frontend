@@ -135,7 +135,6 @@ function LibraryPage() {
       <SelectItem value="application">Documents</SelectItem>
       <SelectItem value="text">Text</SelectItem>
       <SelectItem value="audio">Audio</SelectItem>
-      <SelectItem value="video">Video</SelectItem>
     </SelectContent>
   </Select>
 </div>
