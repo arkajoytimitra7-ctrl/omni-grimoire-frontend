@@ -15,7 +15,7 @@ import { createFileSignedUrl } from "@/features/files/access";
 
 type PreviewFile = {
   title: string;
-  storage_path: string;
+  storage_path: string | null;
   mime_type: string | null;
 };
 
@@ -40,6 +40,10 @@ export function FilePreviewDialog({
       setLoading(true);
 
       try {
+        if (!file.storage_path) {
+          throw new Error("This entry has no stored file.");
+        }
+
         const url = await createFileSignedUrl(file.storage_path);
 
         if (!cancelled) {

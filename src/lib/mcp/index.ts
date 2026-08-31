@@ -1,4 +1,5 @@
 import { auth, defineMcp } from "@lovable.dev/mcp-js";
+import type { McpDefinitionInput } from "@lovable.dev/mcp-js";
 
 import createFileTool from "./tools/create-file";
 import listCategoriesTool from "./tools/list-categories";
@@ -28,5 +29,5 @@ export default defineMcp({
     listTagsTool,
     listLikesTool,
     createFileTool,
-  ],
+  ] as unknown as McpDefinitionInput["tools"],
 });

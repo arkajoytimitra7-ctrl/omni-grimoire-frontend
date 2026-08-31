@@ -40,6 +40,7 @@ export interface Database {
     bio?: string | null;
     updated_at?: string | null;
   };
+  Relationships: [];
 };
       private_categories: {
   Row: {
@@ -63,6 +64,7 @@ export interface Database {
     description?: string | null;
     updated_at?: string | null;
   };
+  Relationships: [];
 };
       public_tags: {
         Row: {
@@ -87,6 +89,7 @@ export interface Database {
           description?: string | null;
           icon?: string | null;
         };
+        Relationships: [];
       };
       files: {
   Row: {
@@ -135,6 +138,7 @@ export interface Database {
     is_deleted?: boolean;
     updated_at?: string | null;
   };
+  Relationships: [];
 };
       file_tags: {
         Row: {
@@ -148,6 +152,22 @@ export interface Database {
           created_at?: string;
         };
         Update: Record<string, never>;
+        Relationships: [
+          {
+            foreignKeyName: "file_tags_file_id_fkey";
+            columns: ["file_id"];
+            isOneToOne: false;
+            referencedRelation: "files";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "file_tags_tag_id_fkey";
+            columns: ["tag_id"];
+            isOneToOne: false;
+            referencedRelation: "public_tags";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       likes: {
   Row: {
@@ -161,11 +181,13 @@ export interface Database {
     created_at?: string;
   };
   Update: Record<string, never>;
+  Relationships: [];
 };
-      
+    };
     Views: Record<string, never>;
     Functions: Record<string, never>;
     Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }
 

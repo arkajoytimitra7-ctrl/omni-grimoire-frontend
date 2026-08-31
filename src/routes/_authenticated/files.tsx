@@ -74,8 +74,9 @@ const [search, setSearch] = useState("");
     );
   }, [data, search]);
 
-  const handleOpenFile = async (storagePath: string) => {
+  const handleOpenFile = async (storagePath: string | null) => {
   try {
+    if (!storagePath) throw new Error("This entry has no stored file.");
     const signedUrl = await createFileSignedUrl(storagePath);
     window.open(signedUrl, "_blank", "noopener,noreferrer");
   } catch (error) {
@@ -88,11 +89,12 @@ const [search, setSearch] = useState("");
 };
 
   const handleDownloadFile = async (
-  storagePath: string,
-  originalFilename: string,
+  storagePath: string | null,
+  originalFilename: string | null,
 ) => {
   try {
-    await downloadFile(storagePath, originalFilename);
+    if (!storagePath) throw new Error("This entry has no stored file.");
+    await downloadFile(storagePath, originalFilename ?? "download");
   } catch (error) {
     toast.error(
       error instanceof Error
@@ -263,7 +265,7 @@ const [search, setSearch] = useState("");
 </Button>
             <FileDeleteDialog
   fileId={file.id}
-  storagePath={file.storage_path}
+  storagePath={file.storage_path ?? ""}
   title={file.title}
   userId={user!.id}
   onDeleted={() => {
