@@ -26,12 +26,19 @@ type Category = {
   name: string;
 };
 
+type PublicTag = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
 type FileUploadData = {
   title: string;
   description: string;
   file: File;
   categoryId: string | null;
   visibility: "private" | "public";
+  publicTagIds: string[];
 };
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -55,9 +62,11 @@ const ALLOWED_MIME_TYPES = new Set([
 
 export function FileUploadDialog({
   categories,
+  publicTags,
   onSubmit,
 }: {
   categories: Category[];
+  publicTags: PublicTag[];
   onSubmit?: (data: FileUploadData) => Promise<void> | void;
 }) {
   const [open, setOpen] = useState(false);
@@ -65,6 +74,7 @@ export function FileUploadDialog({
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [categoryId, setCategoryId] = useState("none");
+  const [publicTagIds, setPublicTagIds] = useState<string[]>([]);
   const [visibility, setVisibility] =
     useState<"private" | "public">("private");
   const [pending, setPending] = useState(false);
@@ -98,6 +108,14 @@ export function FileUploadDialog({
     }
   };
 
+  const togglePublicTag = (tagId: string) => {
+  setPublicTagIds((current) =>
+    current.includes(tagId)
+      ? current.filter((id) => id !== tagId)
+      : [...current, tagId],
+  );
+};
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
@@ -127,18 +145,20 @@ export function FileUploadDialog({
 
     try {
       await onSubmit?.({
-        title: trimmedTitle,
-        description: description.trim(),
-        file,
-        categoryId: categoryId === "none" ? null : categoryId,
-        visibility,
-      });
+  title: trimmedTitle,
+  description: description.trim(),
+  file,
+  categoryId: categoryId === "none" ? null : categoryId,
+  visibility,
+  publicTagIds,
+});
 
       setOpen(false);
       setTitle("");
       setDescription("");
       setFile(null);
       setCategoryId("none");
+      setPublicTagIds([]);
       setVisibility("private");
     } catch {
       // The upload handler is responsible for displaying its own error.
@@ -225,6 +245,43 @@ export function FileUploadDialog({
               </SelectContent>
             </Select>
           </div>
+
+          <div className="space-y-2">
+  <Label>Public Tags</Label>
+
+  <div className="flex flex-wrap gap-2">
+    {publicTags.map((tag) => {
+      const selected = publicTagIds.includes(tag.id);
+
+      return (
+        <button
+          key={tag.id}
+          type="button"
+          onClick={() => togglePublicTag(tag.id)}
+          aria-pressed={selected}
+          className={[
+            "rounded-full border px-3 py-1.5 text-sm transition",
+            selected
+              ? "border-primary bg-primary text-primary-foreground"
+              : "border-border bg-background text-muted-foreground hover:bg-muted",
+          ].join(" ")}
+        >
+          {tag.name}
+        </button>
+      );
+    })}
+  </div>
+
+  {publicTags.length === 0 && (
+    <p className="text-xs text-muted-foreground">
+      No public tags are currently available.
+    </p>
+  )}
+
+  <p className="text-xs text-muted-foreground">
+    Select one or more public tags to help organize this file in the Library.
+  </p>
+</div>
 
           <div className="space-y-2">
             <Label>Visibility</Label>
