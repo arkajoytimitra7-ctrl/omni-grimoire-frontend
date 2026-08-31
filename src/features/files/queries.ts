@@ -22,19 +22,30 @@ export const libraryFilesQuery = queryOptions({
     return data ?? [];
   },
 });
+type LibraryFile = GrimoireFile & {
+  file_tags: {
+    tag_id: string;
+  }[];
+};
 
 /** Files owned by a specific user. */
 export const userFilesQuery = (userId: string | undefined) =>
   queryOptions({
     queryKey: ["files", "owned", userId],
     enabled: Boolean(userId),
-    queryFn: async (): Promise<GrimoireFile[]> => {
+    queryFn: async (): Promise<LibraryFile[]> => {
       const { data, error } = await supabase
         .from("files")
-        .select(FILE_COLUMNS)
+        .select(`
+  ${FILE_COLUMNS},
+  file_tags (
+    tag_id
+  )
+`)
         .eq("owner_id", userId!)
         .eq("is_deleted", false)
         .order("created_at", { ascending: false });
+        .limit(50);
 
       if (error) throw error;
       return data ?? [];
