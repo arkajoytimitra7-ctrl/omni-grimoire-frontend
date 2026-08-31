@@ -16,6 +16,7 @@ import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { userFilesQuery } from "@/features/files/queries";
 import { privateCategoriesQuery } from "@/features/categories/queries";
+import { publicTagsQuery } from "@/features/tags/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { FileUploadDialog } from "@/components/files/file-upload-dialog";
 import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
@@ -57,6 +58,7 @@ const { data, isPending, error } = useQuery(userFilesQuery(user?.id));
 const { data: categories = [] } = useQuery(
   privateCategoriesQuery(user?.id),
 );
+         const { data: publicTags = [] } = useQuery(publicTagsQuery);
 
 const [search, setSearch] = useState("");
 
@@ -111,14 +113,16 @@ const [search, setSearch] = useState("");
   description="Your personal collection of files stored in Omni Grimoire."
   actions={
   <FileUploadDialog
-    categories={categories}
-    onSubmit={async ({
-      title,
-      description,
-      file,
-      categoryId,
-      visibility,
-    }) => {
+  categories={categories}
+  publicTags={publicTags}
+  onSubmit={async ({
+    title,
+    description,
+    file,
+    categoryId,
+    visibility,
+    publicTagIds,
+  }) => {
       if (!user) {
         toast.error("You must be signed in to upload a file.");
         return;
@@ -126,13 +130,14 @@ const [search, setSearch] = useState("");
 
       try {
         await createFile({
-          userId: user.id,
-          title,
-          description,
-          file,
-          categoryId,
-          visibility,
-        });
+  userId: user.id,
+  title,
+  description,
+  file,
+  categoryId,
+  visibility,
+  publicTagIds,
+});
 
         await queryClient.invalidateQueries({
           queryKey: ["files", "owned", user.id],
