@@ -173,7 +173,7 @@ export function FileUploadDialog({
         <Button>Add file</Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Add to your grimoire</DialogTitle>
           <DialogDescription>
