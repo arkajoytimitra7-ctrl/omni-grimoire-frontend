@@ -12,7 +12,8 @@ import { Download, ExternalLink, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
+import { FilePreviewDialog } from "@/components/files/file-preview-dialog"
+import { publicTagsQuery } from "@/features/tags/queries";
 import {
   createFileSignedUrl,
   downloadFile,
@@ -53,6 +54,8 @@ function LibraryPage() {
   const { data, isPending, error } = useQuery(libraryFilesQuery);
   const [search, setSearch] = useState("");
   const [fileType, setFileType] = useState("all");
+  const [tagId, setTagId] = useState("all");
+  const { data: publicTags } = useQuery(publicTagsQuery);
 
   const filteredFiles = useMemo(() => {
   if (!data) return [];
