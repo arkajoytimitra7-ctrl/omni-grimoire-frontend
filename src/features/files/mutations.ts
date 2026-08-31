@@ -9,6 +9,7 @@ type CreateFileInput = {
   file: File;
   categoryId: string | null;
   visibility: "private" | "public";
+  publicTagIds: string[];
 };
 
 function getFileType(mimeType: string): 
@@ -44,6 +45,7 @@ export async function createFile({
   file,
   categoryId,
   visibility,
+  publicTagIds,
 }: CreateFileInput) {
   const fileId = crypto.randomUUID();
 
@@ -89,6 +91,30 @@ export async function createFile({
       .eq("owner_id", userId);
 
     throw uploadError;
+  }
+
+  if (publicTagIds.length > 0) {
+  const { error: tagError } = await supabase
+    .from("file_tags")
+    .insert(
+      publicTagIds.map((tagId) => ({
+        file_id: fileId,
+        tag_id: tagId,
+      })),
+    );
+
+  if (tagError) {
+    // Clean up the uploaded file and database row if tag assignment fails.
+    await supabase.storage.from(BUCKET).remove([storagePath]);
+
+    await supabase
+      .from("files")
+      .delete()
+      .eq("id", fileId)
+      .eq("owner_id", userId);
+
+    throw tagError;
+  }
   }
 
   return fileId;
