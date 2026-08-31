@@ -1,9 +1,10 @@
 import type { Database } from "@/lib/database.types";
 type GR = { foreignKeyName: string; columns: string[]; isOneToOne?: boolean; referencedRelation: string; referencedColumns: string[] };
 type GT = { Row: Record<string, unknown>; Insert: Record<string, unknown>; Update: Record<string, unknown>; Relationships: GR[] };
-type Bad = { [K in keyof Database["public"]["Tables"]]: Database["public"]["Tables"][K] extends GT ? never : K }[keyof Database["public"]["Tables"]];
-const b: Bad = "x" as never;
-type Show = Bad;
-const s: Show = null as never;
-type ErrHere = { a: Bad };
-const e: number = null as unknown as Bad;
+type T = Database["public"]["Tables"];
+const a: number = null as unknown as (T["profiles"] extends GT ? "P" : 1);
+const b: number = null as unknown as (T["private_categories"] extends GT ? "PC" : 1);
+const c: number = null as unknown as (T["public_tags"] extends GT ? "PT" : 1);
+const d: number = null as unknown as (T["files"] extends GT ? "F" : 1);
+const e: number = null as unknown as (T["file_tags"] extends GT ? "FT" : 1);
+const f: number = null as unknown as (T["likes"] extends GT ? "L" : 1);
