@@ -40,6 +40,7 @@ export interface Database {
     bio?: string | null;
     updated_at?: string | null;
   };
+  Relationships: [];
 };
       private_categories: {
   Row: {
@@ -63,6 +64,7 @@ export interface Database {
     description?: string | null;
     updated_at?: string | null;
   };
+  Relationships: [];
 };
       public_tags: {
         Row: {
@@ -87,6 +89,8 @@ export interface Database {
           description?: string | null;
           icon?: string | null;
         };
+        Relationships: [];
+        Relationships: [];
       };
       files: {
   Row: {
@@ -135,6 +139,7 @@ export interface Database {
     is_deleted?: boolean;
     updated_at?: string | null;
   };
+  Relationships: [];
 };
       file_tags: {
         Row: {
@@ -161,6 +166,7 @@ export interface Database {
     created_at?: string;
   };
   Update: Record<string, never>;
+  Relationships: [];
 };
     };
     Views: Record<string, never>;
