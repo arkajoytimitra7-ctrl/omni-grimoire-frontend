@@ -90,7 +90,6 @@ export interface Database {
           icon?: string | null;
         };
         Relationships: [];
-        Relationships: [];
       };
       files: {
   Row: {
