@@ -152,6 +152,22 @@ export interface Database {
           created_at?: string;
         };
         Update: Record<string, never>;
+        Relationships: [
+          {
+            foreignKeyName: "file_tags_file_id_fkey";
+            columns: ["file_id"];
+            isOneToOne: false;
+            referencedRelation: "files";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "file_tags_tag_id_fkey";
+            columns: ["tag_id"];
+            isOneToOne: false;
+            referencedRelation: "public_tags";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       likes: {
   Row: {
