@@ -20,12 +20,12 @@ export default defineTool({
     const supabase = supabaseForUser(ctx);
     let query = supabase
       .from("files")
-      .select("id,title,description,category_id,is_public,mime_type,size_bytes,created_at")
-      .eq("user_id", ctx.getUserId()!)
+      .select("id,title,description,private_category_id,visibility,mime_type,file_size,created_at")
+      .eq("owner_id", ctx.getUserId()!)
       .order("created_at", { ascending: false })
       .limit(Math.min(Math.max(limit ?? 25, 1), 100));
-    if (category_id) query = query.eq("category_id", category_id);
-    if (only_public) query = query.eq("is_public", true);
+    if (category_id) query = query.eq("private_category_id", category_id);
+    if (only_public) query = query.eq("visibility", "public");
     const { data, error } = await query;
     return error
       ? { content: [{ type: "text", text: error.message }], isError: true }

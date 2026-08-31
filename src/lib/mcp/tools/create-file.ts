@@ -23,13 +23,13 @@ export default defineTool({
     const { data, error } = await supabase
       .from("files")
       .insert({
-        user_id: ctx.getUserId()!,
+        owner_id: ctx.getUserId()!,
         title: clean,
         description: description ?? null,
-        category_id: category_id ?? null,
-        is_public: is_public ?? false,
+        private_category_id: category_id ?? null,
+        visibility: is_public ? "public" : "private",
       })
-      .select("id,title,description,category_id,is_public,created_at");
+      .select("id,title,description,private_category_id,visibility,created_at");
     return error
       ? { content: [{ type: "text", text: error.message }], isError: true }
       : {
