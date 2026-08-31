@@ -75,10 +75,13 @@ function LibraryPage() {
       fileType === "all" ||
       file.mime_type?.startsWith(`${fileType}/`);
 
-    return matchesSearch && matchesFileType;
-  });
-}, [data, search, fileType]);
+    const matchesTag =
+      tagId === "all" ||
+      file.file_tags.some((tag) => tag.tag_id === tagId);
 
+    return matchesSearch && matchesFileType && matchesTag;
+  });
+}, [data, search, fileType, tagId]);
   const handleOpenFile = async (storagePath: string) => {
   try {
     const signedUrl = await createFileSignedUrl(storagePath);
@@ -140,6 +143,22 @@ function LibraryPage() {
       <SelectItem value="audio">Audio</SelectItem>
     </SelectContent>
   </Select>
+
+        <Select value={tagId} onValueChange={setTagId}>
+  <SelectTrigger className="w-full sm:w-56">
+    <SelectValue placeholder="Public tag" />
+  </SelectTrigger>
+
+  <SelectContent>
+    <SelectItem value="all">All tags</SelectItem>
+
+    {publicTags?.map((tag) => (
+      <SelectItem key={tag.id} value={tag.id}>
+        {tag.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
 </div>
       {isPending && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
