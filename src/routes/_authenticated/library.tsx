@@ -1,7 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { FileText, Image, Library } from "lucide-react";
 import { useMemo, useState } from "react";
+import { FileLikeButton } from "@/components/files/file-like-button";
+import { userLikesQuery } from "@/features/likes/queries";
+import { useAuth } from "@/hooks/use-auth";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/common/page-header";
@@ -56,6 +59,12 @@ function LibraryPage() {
   const [fileType, setFileType] = useState("all");
   const [tagId, setTagId] = useState("all");
   const { data: publicTags } = useQuery(publicTagsQuery);
+  const { user } = useAuth();
+const queryClient = useQueryClient();
+
+const { data: userLikes = [] } = useQuery(
+  userLikesQuery(user?.id),
+);
 
   const filteredFiles = useMemo(() => {
   if (!data) return [];
@@ -236,6 +245,18 @@ function LibraryPage() {
   {file.mime_type?.startsWith("image/") && (
     <FilePreviewDialog file={file} />
   )}
+                <FileLikeButton
+  userId={user!.id}
+  fileId={file.id}
+  initiallyLiked={userLikes.some(
+    (like) => like.file_id === file.id,
+  )}
+  onChanged={() => {
+    void queryClient.invalidateQueries({
+      queryKey: ["likes", user!.id],
+    });
+  }}
+/>
 
   <Button
     variant="outline"
