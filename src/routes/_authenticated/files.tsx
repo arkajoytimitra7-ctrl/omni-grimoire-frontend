@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { userFilesQuery } from "@/features/files/queries";
 import { privateCategoriesQuery } from "@/features/categories/queries";
 import { publicTagsQuery } from "@/features/tags/queries";
+import { FilePublicTagsDialog } from "@/components/files/file-public-tags-dialog";
 import { useAuth } from "@/hooks/use-auth";
 import { FileUploadDialog } from "@/components/files/file-upload-dialog";
 import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
@@ -268,6 +269,16 @@ const [search, setSearch] = useState("");
   <Download className="mr-2 size-4" aria-hidden />
   Download
 </Button>
+                              <FilePublicTagsDialog
+  fileId={file.id}
+  currentTagIds={file.file_tags.map((tag) => tag.tag_id)}
+  publicTags={publicTags}
+  onSaved={() => {
+    void queryClient.invalidateQueries({
+      queryKey: ["files", "owned", user!.id],
+    });
+  }}
+/>
             <FileDeleteDialog
   fileId={file.id}
   storagePath={file.storage_path ?? ""}
