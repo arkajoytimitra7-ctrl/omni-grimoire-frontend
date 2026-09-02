@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Download, ExternalLink, FileText, Heart, Image } from "lucide-react";
+import { useMemo } from "react";
 import { toast } from "sonner";
 
 import { EmptyState } from "@/components/common/empty-state";
@@ -12,7 +13,10 @@ import {
   createFileSignedUrl,
   downloadFile,
 } from "@/features/files/access";
-import { userLikesQuery } from "@/features/likes/queries";
+import {
+  fileLikeCountsQuery,
+  userLikesQuery,
+} from "@/features/likes/queries";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/likes")({
