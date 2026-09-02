@@ -1,29 +1,20 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { FileText, Image, Library, Heart } from "lucide-react";
-import { useMemo, useState } from "react";
-import { FileLikeButton } from "@/components/files/file-like-button";
 import {
-  fileLikeCountsQuery,
-  userLikesQuery,
-} from "@/features/likes/queries";
-import { useAuth } from "@/hooks/use-auth";
+  Download,
+  ExternalLink,
+  FileText,
+  Heart,
+  Image,
+  Library,
+  Search,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/common/page-header";
-import { Skeleton } from "@/components/ui/skeleton";
-import { libraryFilesQuery } from "@/features/files/queries";
-
-import { Download, ExternalLink, Search } from "lucide-react";
-import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
-import { FilePreviewDialog } from "@/components/files/file-preview-dialog"
-import { publicTagsQuery } from "@/features/tags/queries";
-import {
-  createFileSignedUrl,
-  downloadFile,
-} from "@/features/files/access";
 import {
   Select,
   SelectContent,
@@ -31,6 +22,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { FileLikeButton } from "@/components/files/file-like-button";
+import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
+import {
+  createFileSignedUrl,
+  downloadFile,
+} from "@/features/files/access";
+import { libraryFilesQuery } from "@/features/files/queries";
+import {
+  fileLikeCountsQuery,
+  userLikesQuery,
+} from "@/features/likes/queries";
+import { publicTagsQuery } from "@/features/tags/queries";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/library")({
   head: () => ({
@@ -63,45 +68,46 @@ function LibraryPage() {
   const [tagId, setTagId] = useState("all");
   const { data: publicTags } = useQuery(publicTagsQuery);
   const { user } = useAuth();
-const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-const { data: userLikes = [] } = useQuery(
-  userLikesQuery(user?.id),
-);
+  const { data: userLikes = [] } = useQuery(
+    userLikesQuery(user?.id),
+  );
 
   const filteredFiles = useMemo(() => {
-  if (!data) return [];
+    if (!data) return [];
 
-  const term = search.trim().toLowerCase();
+    const term = search.trim().toLowerCase();
 
-  return data.filter((file) => {
-    const matchesSearch =
-      !term ||
-      [file.title, file.description, file.mime_type]
-        .filter(Boolean)
-        .some((value) =>
-          value!.toLowerCase().includes(term),
-        );
+    return data.filter((file) => {
+      const matchesSearch =
+        !term ||
+        [file.title, file.description, file.mime_type]
+          .filter(Boolean)
+          .some((value) =>
+            value!.toLowerCase().includes(term),
+          );
 
-    const matchesFileType =
-      fileType === "all" ||
-      file.mime_type?.startsWith(`${fileType}/`);
+      const matchesFileType =
+        fileType === "all" ||
+        file.mime_type?.startsWith(`${fileType}/`);
 
-    const matchesTag =
-      tagId === "all" ||
-      file.file_tags.some((tag) => tag.tag_id === tagId);
+      const matchesTag =
+        tagId === "all" ||
+        file.file_tags.some((tag) => tag.tag_id === tagId);
 
-    return matchesSearch && matchesFileType && matchesTag;
-  });
-    const fileIds = useMemo(
-  () => filteredFiles.map((file) => file.id),
-  [filteredFiles],
-);
+      return matchesSearch && matchesFileType && matchesTag;
+    });
+  }, [data, search, fileType, tagId]);
 
-const { data: likeCounts = {} } = useQuery(
-  fileLikeCountsQuery(fileIds),
-);
-}, [data, search, fileType, tagId]);
+  const fileIds = useMemo(
+    () => filteredFiles.map((file) => file.id),
+    [filteredFiles],
+  );
+
+  const { data: likeCounts = {} } = useQuery(
+    fileLikeCountsQuery(fileIds),
+  );
 
   const handleOpenFile = async (storagePath: string | null) => {
   try {
