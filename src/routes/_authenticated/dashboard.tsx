@@ -216,7 +216,7 @@ function QuickActions() {
         </Link>
 
         <Link
-          to="/search"
+          to="/library"
           className="group rounded-lg border border-border p-4 transition-colors hover:bg-muted/50"
         >
           <Search className="size-5 text-primary" aria-hidden />
