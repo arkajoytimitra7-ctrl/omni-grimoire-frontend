@@ -72,3 +72,32 @@ export const userLikesQuery = (userId: string | undefined) =>
       }));
     },
   });
+
+export const fileLikeCountsQuery = (fileIds: string[]) =>
+  queryOptions({
+    queryKey: ["likes", "counts", fileIds],
+    enabled: fileIds.length > 0,
+
+    queryFn: async (): Promise<Record<string, number>> => {
+      if (fileIds.length === 0) {
+        return {};
+      }
+
+      const { data, error } = await supabase
+        .from("likes")
+        .select("file_id")
+        .in("file_id", fileIds);
+
+      if (error) {
+        throw error;
+      }
+
+      return (data ?? []).reduce<Record<string, number>>(
+        (counts, like) => {
+          counts[like.file_id] = (counts[like.file_id] ?? 0) + 1;
+          return counts;
+        },
+        {},
+      );
+    },
+  });
