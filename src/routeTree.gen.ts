@@ -17,7 +17,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedFilesRouteImport } from './routes/_authenticated/files'
 import { Route as AuthenticatedLibraryRouteImport } from './routes/_authenticated/library'
 import { Route as AuthenticatedLikesRouteImport } from './routes/_authenticated/likes'
-import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedTagsRouteImport } from './routes/_authenticated/tags'
 
 const IndexRoute = IndexRouteImport.update({
@@ -59,9 +59,9 @@ const AuthenticatedLikesRoute = AuthenticatedLikesRouteImport.update({
   path: '/likes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
-  id: '/search',
-  path: '/search',
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTagsRoute = AuthenticatedTagsRouteImport.update({
@@ -78,7 +78,7 @@ export interface FileRoutesByFullPath {
   '/files': typeof AuthenticatedFilesRoute
   '/library': typeof AuthenticatedLibraryRoute
   '/likes': typeof AuthenticatedLikesRoute
-  '/search': typeof AuthenticatedSearchRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/tags': typeof AuthenticatedTagsRoute
 }
 export interface FileRoutesByTo {
@@ -89,7 +89,7 @@ export interface FileRoutesByTo {
   '/files': typeof AuthenticatedFilesRoute
   '/library': typeof AuthenticatedLibraryRoute
   '/likes': typeof AuthenticatedLikesRoute
-  '/search': typeof AuthenticatedSearchRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/tags': typeof AuthenticatedTagsRoute
 }
 export interface FileRoutesById {
@@ -102,7 +102,7 @@ export interface FileRoutesById {
   '/_authenticated/files': typeof AuthenticatedFilesRoute
   '/_authenticated/library': typeof AuthenticatedLibraryRoute
   '/_authenticated/likes': typeof AuthenticatedLikesRoute
-  '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/tags': typeof AuthenticatedTagsRoute
 }
 export interface FileRouteTypes {
@@ -115,7 +115,7 @@ export interface FileRouteTypes {
     | '/files'
     | '/library'
     | '/likes'
-    | '/search'
+    | '/profile'
     | '/tags'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -126,7 +126,7 @@ export interface FileRouteTypes {
     | '/files'
     | '/library'
     | '/likes'
-    | '/search'
+    | '/profile'
     | '/tags'
   id:
     | '__root__'
@@ -138,7 +138,7 @@ export interface FileRouteTypes {
     | '/_authenticated/files'
     | '/_authenticated/library'
     | '/_authenticated/likes'
-    | '/_authenticated/search'
+    | '/_authenticated/profile'
     | '/_authenticated/tags'
   fileRoutesById: FileRoutesById
 }
@@ -206,11 +206,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLikesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/search': {
-      id: '/_authenticated/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof AuthenticatedSearchRouteImport
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tags': {
@@ -229,7 +229,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFilesRoute: typeof AuthenticatedFilesRoute
   AuthenticatedLibraryRoute: typeof AuthenticatedLibraryRoute
   AuthenticatedLikesRoute: typeof AuthenticatedLikesRoute
-  AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedTagsRoute: typeof AuthenticatedTagsRoute
 }
 
@@ -239,7 +239,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFilesRoute: AuthenticatedFilesRoute,
   AuthenticatedLibraryRoute: AuthenticatedLibraryRoute,
   AuthenticatedLikesRoute: AuthenticatedLikesRoute,
-  AuthenticatedSearchRoute: AuthenticatedSearchRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedTagsRoute: AuthenticatedTagsRoute,
 }
 
