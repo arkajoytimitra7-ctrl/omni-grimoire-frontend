@@ -195,6 +195,11 @@ function LikesPage() {
                         file.created_at,
                       ).toLocaleDateString()}
                     </span>
+
+                    <span className="inline-flex items-center gap-1">
+                      <Heart className="size-3.5" aria-hidden />
+                      {likeCounts[file.id] ?? 0}
+                    </span>
                   </div>
                 </div>
 
