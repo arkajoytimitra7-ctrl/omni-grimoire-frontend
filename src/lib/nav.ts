@@ -1,13 +1,7 @@
-import { BookMarked, FolderTree, Heart, LayoutDashboard, Library, Search, Tags, UserCircle } from "lucide-react";
-
+import { BookMarked, FolderTree, Heart, LayoutDashboard, Library, Tags, UserCircle } from "lucide-react";
 
 /** Single source of truth for the authenticated app navigation. */
 export const appNav = [
-  {
-  title: "Profile",
-  url: "/profile",
-  icon: UserCircle,
-},
   {
     label: "Dashboard",
     to: "/dashboard",
