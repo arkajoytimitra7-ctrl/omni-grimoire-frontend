@@ -1,9 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { FileText, Image, Library } from "lucide-react";
+import { FileText, Image, Library, Heart } from "lucide-react";
 import { useMemo, useState } from "react";
 import { FileLikeButton } from "@/components/files/file-like-button";
-import { userLikesQuery } from "@/features/likes/queries";
+import {
+  fileLikeCountsQuery,
+  userLikesQuery,
+} from "@/features/likes/queries";
 import { useAuth } from "@/hooks/use-auth";
 
 import { EmptyState } from "@/components/common/empty-state";
@@ -90,7 +93,16 @@ const { data: userLikes = [] } = useQuery(
 
     return matchesSearch && matchesFileType && matchesTag;
   });
+    const fileIds = useMemo(
+  () => filteredFiles.map((file) => file.id),
+  [filteredFiles],
+);
+
+const { data: likeCounts = {} } = useQuery(
+  fileLikeCountsQuery(fileIds),
+);
 }, [data, search, fileType, tagId]);
+
   const handleOpenFile = async (storagePath: string | null) => {
   try {
     if (!storagePath) throw new Error("This entry has no stored file.");
@@ -229,17 +241,22 @@ const { data: userLikes = [] } = useQuery(
       </p>
     )}
 
-    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-      <span>{file.mime_type ?? "Unknown type"}</span>
+    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+  <span>{file.mime_type ?? "Unknown type"}</span>
 
-      {file.file_size !== null && (
-        <span>{formatFileSize(file.file_size)}</span>
-      )}
+  {file.file_size !== null && (
+    <span>{formatFileSize(file.file_size)}</span>
+  )}
 
-      <span>
-        {new Date(file.created_at).toLocaleDateString()}
-      </span>
-    </div>
+  <span>
+    {new Date(file.created_at).toLocaleDateString()}
+  </span>
+
+  <span className="inline-flex items-center gap-1">
+    <Heart className="size-3.5" aria-hidden />
+    {likeCounts[file.id] ?? 0}
+  </span>
+</div>
   </div>
               <div className="flex flex-wrap gap-2">
   {file.mime_type?.startsWith("image/") && (
@@ -252,10 +269,14 @@ const { data: userLikes = [] } = useQuery(
     (like) => like.file_id === file.id,
   )}
   onChanged={() => {
-    void queryClient.invalidateQueries({
-      queryKey: ["likes", user!.id],
-    });
-  }}
+  void queryClient.invalidateQueries({
+    queryKey: ["likes", user!.id],
+  });
+
+  void queryClient.invalidateQueries({
+    queryKey: ["likes", "counts"],
+  });
+}}
 />
 
   <Button
