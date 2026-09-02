@@ -55,6 +55,15 @@ function LikesPage() {
     userLikesQuery(user?.id),
   );
 
+  const fileIds = useMemo(
+    () => (data ?? []).map((like) => like.file_id),
+    [data],
+  );
+
+  const { data: likeCounts = {} } = useQuery(
+    fileLikeCountsQuery(fileIds),
+  );
+
   const handleOpenFile = async (storagePath: string | null) => {
     try {
       if (!storagePath) {
