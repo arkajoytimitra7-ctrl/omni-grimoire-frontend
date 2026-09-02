@@ -242,10 +242,31 @@ function LibraryPage() {
     </h2>
 
     {file.description && (
-      <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-        {file.description}
-      </p>
-    )}
+  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+    {file.description}
+  </p>
+)}
+
+    {file.file_tags.length > 0 && (
+  <div className="mt-2 flex flex-wrap gap-1.5">
+    {file.file_tags.map((fileTag) => {
+      const tag = publicTags?.find(
+        (publicTag) => publicTag.id === fileTag.tag_id,
+      );
+
+      if (!tag) return null;
+
+      return (
+        <span
+          key={tag.id}
+          className="rounded-full border border-border bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+        >
+          {tag.name}
+        </span>
+      );
+    })}
+  </div>
+)}
 
     <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
   <span>{file.mime_type ?? "Unknown type"}</span>
