@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Download, ExternalLink, FileText, Heart, Image } from "lucide-react";
+import { useMemo } from "react";
 import { toast } from "sonner";
 
 import { EmptyState } from "@/components/common/empty-state";
@@ -12,7 +13,10 @@ import {
   createFileSignedUrl,
   downloadFile,
 } from "@/features/files/access";
-import { userLikesQuery } from "@/features/likes/queries";
+import {
+  fileLikeCountsQuery,
+  userLikesQuery,
+} from "@/features/likes/queries";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/likes")({
@@ -49,6 +53,15 @@ function LikesPage() {
 
   const { data, isPending, error } = useQuery(
     userLikesQuery(user?.id),
+  );
+
+  const fileIds = useMemo(
+    () => (data ?? []).map((like) => like.file_id),
+    [data],
+  );
+
+  const { data: likeCounts = {} } = useQuery(
+    fileLikeCountsQuery(fileIds),
   );
 
   const handleOpenFile = async (storagePath: string | null) => {
@@ -182,6 +195,11 @@ function LikesPage() {
                         file.created_at,
                       ).toLocaleDateString()}
                     </span>
+
+                    <span className="inline-flex items-center gap-1">
+                      <Heart className="size-3.5" aria-hidden />
+                      {likeCounts[file.id] ?? 0}
+                    </span>
                   </div>
                 </div>
 
@@ -193,6 +211,10 @@ function LikesPage() {
                     onChanged={() => {
                       void queryClient.invalidateQueries({
                         queryKey: ["likes", user!.id],
+                      });
+
+                      void queryClient.invalidateQueries({
+                        queryKey: ["likes", "counts"],
                       });
                     }}
                   />
