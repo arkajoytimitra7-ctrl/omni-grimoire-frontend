@@ -212,6 +212,10 @@ function LikesPage() {
                       void queryClient.invalidateQueries({
                         queryKey: ["likes", user!.id],
                       });
+
+                      void queryClient.invalidateQueries({
+                        queryKey: ["likes", "counts"],
+                      });
                     }}
                   />
 
