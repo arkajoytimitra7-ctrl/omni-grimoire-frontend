@@ -32,7 +32,8 @@ function CategoriesPage() {
   return (
     <>
       <PageHeader
-  title="Categories"
+  eyebrow="Private Section"
+  title="My Categories"
   description="Private shelves visible only to you."
   actions={
     user ? (
@@ -61,7 +62,7 @@ function CategoriesPage() {
           {data.map((category) => (
             <li
   key={category.id}
-  className="surface-rune flex flex-col gap-4 p-4"
+  className="surface-panel flex flex-col gap-4 p-5"
 >
   <div>
     <h2 className="text-base font-semibold">

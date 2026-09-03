@@ -23,7 +23,7 @@ function TagsPage() {
 
   return (
     <>
-      <PageHeader title="Tags" description="Public vocabulary shared by every scribe." />
+      <PageHeader eyebrow="Shared" title="Tags" description="Public vocabulary shared by every scribe." />
       {isPending && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => (
@@ -38,7 +38,7 @@ function TagsPage() {
       {data && data.length > 0 && (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((tag) => (
-            <li key={tag.id} className="surface-rune p-4">
+            <li key={tag.id} className="surface-panel p-5 transition-shadow hover:shadow-[var(--shadow-lift)]">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-base font-semibold">{tag.name}</h2>
                 <Badge variant="secondary">{tag.slug}</Badge>

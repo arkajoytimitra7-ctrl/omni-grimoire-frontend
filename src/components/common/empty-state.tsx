@@ -14,8 +14,8 @@ export function EmptyState({
 }) {
   return (
     <div className="surface-rune flex flex-col items-center gap-3 px-6 py-14 text-center">
-      <span className="flex size-12 items-center justify-center rounded-full border border-border bg-secondary">
-        <Icon className="size-5 text-primary" aria-hidden />
+      <span className="bg-lavender text-lavender-foreground flex size-12 items-center justify-center rounded-full">
+        <Icon className="size-5" aria-hidden />
       </span>
       <h2 className="font-display text-lg font-semibold">{title}</h2>
       <p className="max-w-sm text-sm text-muted-foreground">{description}</p>
