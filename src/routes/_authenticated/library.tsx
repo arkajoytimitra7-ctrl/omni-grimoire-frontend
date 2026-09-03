@@ -141,7 +141,11 @@ function LibraryPage() {
 
   return (
     <>
-      <PageHeader title="Library" description="Entries visible to you across the grimoire." />
+      <PageHeader
+        eyebrow="Public Section"
+        title="Public Library"
+        description="Discover entries published to the shared Omni Grimoire collection."
+      />
 
       <div className="relative">
   <Search
@@ -220,12 +224,12 @@ function LibraryPage() {
           {filteredFiles.map((file) => (
             <li
   key={file.id}
-  className="surface-rune flex flex-col gap-4 p-4"
+  className="surface-panel flex flex-col gap-4 p-5 transition-shadow hover:shadow-[var(--shadow-lift)]"
 >
-  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border">
+  <div className="icon-chip bg-lavender text-lavender-foreground">
     {file.mime_type?.startsWith("image/") ? (
       <Image
-        className="size-5 text-primary"
+        className="size-5"
         aria-hidden
       />
     ) : (

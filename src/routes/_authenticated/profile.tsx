@@ -103,7 +103,7 @@ function ProfilePage() {
       {!isPending && !error && (
         <div className="max-w-2xl space-y-4">
           {/* Identity */}
-          <section className="surface-rune p-6">
+          <section className="surface-panel p-6">
             <div className="flex items-start justify-between gap-4">
               <div className="flex min-w-0 items-start gap-4">
                 <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-muted">
@@ -149,7 +149,7 @@ function ProfilePage() {
           </section>
 
           {/* Profile details */}
-          <section className="surface-rune p-6">
+          <section className="surface-panel p-6">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-base font-semibold">
                 About
@@ -248,7 +248,7 @@ function ProfilePage() {
           </section>
 
           {/* Account */}
-          <section className="surface-rune p-6">
+          <section className="surface-panel p-6">
             <h2 className="text-base font-semibold">
               Account
             </h2>

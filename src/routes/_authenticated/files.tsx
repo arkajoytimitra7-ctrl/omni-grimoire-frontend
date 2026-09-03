@@ -153,7 +153,8 @@ function FilesPage() {
   return (
     <>
       <PageHeader
-        title="Files"
+        eyebrow="Private Section"
+        title="My Files"
         description="Your personal collection of files stored in Omni Grimoire."
         actions={
           <FileUploadDialog
@@ -322,11 +323,11 @@ function FilesPage() {
             {filteredFiles.map((file) => (
               <li
                 key={file.id}
-                className="surface-rune flex flex-col gap-4 p-4 sm:flex-row sm:items-start"
+                className="surface-panel flex flex-col gap-4 p-5 sm:flex-row sm:items-start"
               >
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border">
+                <div className="icon-chip bg-lavender text-lavender-foreground">
                   <FileText
-                    className="size-5 text-primary"
+                    className="size-5"
                     aria-hidden
                   />
                 </div>
