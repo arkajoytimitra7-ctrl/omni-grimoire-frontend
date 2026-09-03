@@ -253,16 +253,20 @@ function DashboardPage() {
   return (
     <>
       <header className="space-y-2">
-        <h1 className="font-display text-3xl font-semibold sm:text-4xl">
-          Welcome to Omni Grimoire ✨
-        </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          A calm home for everything you collect — private shelves, public discoveries, and the
-          entries you keep coming back to.
-        </p>
-      </header>
+  <p className="text-sm font-medium text-primary">
+    Hello, {profile?.display_name?.trim() || user?.email?.split("@")[0] || "Scribe"} 👋
+  </p>
 
-      <DeveloperHero name={displayName} />
+  <h1 className="font-display text-3xl font-semibold sm:text-4xl">
+    Welcome to Omni Grimoire ✨
+  </h1>
+
+  <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+    A calm home for everything you collect — private shelves, public discoveries, and the
+    entries you keep coming back to.
+  </p>
+</header>
+      <DeveloperHero name="Arkajoyti Mitra" />
 
       <section className="surface-panel p-6">
         <h2 className="font-display text-xl font-semibold">Why Omni Grimoire?</h2>
